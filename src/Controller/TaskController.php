@@ -27,7 +27,7 @@ class TaskController extends AbstractController
         // var_dump($tasks);
         // die;
 
-        dd($tasks);
+        //dd($tasks);
 
         return $this->render('task/index.html.twig', [
             'controller_name' => 'TaskController',
