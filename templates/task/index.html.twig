@@ -14,6 +14,9 @@
 	</div>
 
 	<div class="container">
+
+		<a href="{{ path('task_create') }}" class="btn btn-primary">Ajouter</a>
+
 		<table class="table table-striped tabled-bordered" id="tasksTable">
 			<thead>
 				<th>Id</th>
@@ -21,12 +24,11 @@
 				<th>Description</th>
 				<th>Date effective</th>
 				<th>Catégories</th>
+				<th></th>
+				<th></th>
 			</thead>
 			<tbody>
 
-				<div class="progress">
-					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-				</div>
 
 				{% if tasks is defined %}
 					{% for task in tasks %}
@@ -36,6 +38,12 @@
 							<td>{{ task.description }}</td>
 							<td>{{ task.dueAt | date("d/m/Y h:i") }}</td>
 							<td>{{ task.tag.name }}</td>
+							<td>
+								<a href="{{path ('task_update',{'id':task.id})}}" class="btn btn-success">Modifier</a>
+							</td>
+							<td>
+								<a href="{{path ('task_delete',{'id':task.id})}}" class="btn btn-danger">Supprimer</td>
+							</td>
 						</tr>
 					{% endfor %}
 				{% endif %}
