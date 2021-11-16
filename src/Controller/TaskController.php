@@ -19,7 +19,6 @@ class TaskController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Task::class);
 
         // Dans ce repository nous récupérons toutes les données
-
         $tasks = $repository->findAll();
 
         // Affichage des données

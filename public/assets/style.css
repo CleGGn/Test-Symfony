@@ -1,0 +1,4 @@
+#taskTable,
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+    color: rgb(248, 144, 106) !important;
+}

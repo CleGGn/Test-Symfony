@@ -1,12 +1,20 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('assets/style.css') }}"/>
+	<link rel="stylesheet" href="cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+{% endblock %}
+
 {% block title %}Liste des tâches
 {% endblock %}
 
 {% block body %}
+	<div class="d-flex justify-content-center">
+		<h1>Liste des tâches</h1>
+	</div>
 
 	<div class="container">
-		<table class="table table-striped tabled-bordered border-primary" id="tasksTable">
+		<table class="table table-striped tabled-bordered" id="tasksTable">
 			<thead>
 				<th>Id</th>
 				<th>Nom</th>
@@ -14,6 +22,13 @@
 				<th>Date effective</th>
 			</thead>
 			<tbody>
+
+
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+				</div>
+
+
 				{% if tasks is defined %}
 					{% for task in tasks %}
 						<tr>
@@ -24,8 +39,22 @@
 						</tr>
 					{% endfor %}
 				{% endif %}
+
 			</tbody>
 		</table>
 	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+	<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+$('#tasksTable').DataTable();
+});
+	</script>
 
 {% endblock %}
