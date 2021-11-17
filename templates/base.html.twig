@@ -15,10 +15,12 @@
 
 	</head>
 	<body>
-
-		{% block body %}
-			{#{{ encore_entry_script_tags('app') }}#}
-		{% endblock %}
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			<p>Vous êtes connecté en tant que :
+				{{ app.user.email }}</p>
+			<a href="{{ path('app_logout') }}">Logout</a>
+		{% endif %}
+		{% block body %}{% endblock %}
 
 	</body>
 

@@ -35,12 +35,11 @@ class TaskController extends AbstractController
      */
     public function index(): Response
     {
-
-        // On va chercher avec Doctrine
-        $repository = $this->getDoctrine()->getRepository(Task::class);
+        // $user = $this->getUser();
+        // dd($user);
 
         // Dans ce repository nous récupérons toutes les données
-        $tasks = $repository->findAll();
+        $tasks = $this->repository->findAll();
 
         // Affichage des données
 
