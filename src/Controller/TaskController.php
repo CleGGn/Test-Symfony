@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use DateTime;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
@@ -100,5 +102,36 @@ class TaskController extends AbstractController
         );
 
         return $this->redirectToRoute("task_listing");
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @Route ("/task/listing/download", name="task_download")
+     */
+    public function downloadPdf()
+    {
+        $tasks = $this->repository->findAll();
+        $pdfoption = new Options;
+        $pdfoption->set('defaultFont', 'Arial');
+        //$pdfoption->setIsRemoteEnabled(true);
+
+        // On instancie DOMPDF
+        $dompdf = new Dompdf($pdfoption);
+
+        $html = $this->renderView('pdf/pdfdownload.html.twig', [
+            'tasks' => $tasks,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        $fichier = 'J\'adore les pdf';
+        $dompdf->stream($fichier, [
+            'Attachement' => true
+        ]);
+
+        return new Response();
     }
 }
