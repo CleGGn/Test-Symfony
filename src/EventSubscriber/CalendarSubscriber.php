@@ -31,12 +31,6 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     public function onCalendarSetData(CalendarEvent $calendar)
     {
-        $start = $calendar->getStart();
-        $end = $calendar->getEnd();
-        $filters = $calendar->getFilters();
-
-        // Modify the query to fit to your entity and needs
-        // Change task.beginAt by your start date property
         $tasks = $this->taskRepository->findAll();
         dd($tasks);
 
@@ -47,7 +41,6 @@ class CalendarSubscriber implements EventSubscriberInterface
                 $task->getCreatedAt(),
                 $task->getDueAt(),
                 $task->getDescription()
-                // If the end date is null or not defined, a all day event is created.
             );
             dd($taskEvent);
 
@@ -58,16 +51,17 @@ class CalendarSubscriber implements EventSubscriberInterface
              * and: https://github.com/fullcalendar/fullcalendar/blob/master/src/core/options.ts
              */
 
-            $taskEvent->setOptions([
-                'backgroundColor' => 'red',
-                'borderColor' => 'red',
-            ]);
-            $taskEvent->addOption(
-                'url',
-                $this->router->generate('task_show', [
-                    'id' => $task->getId(),
-                ])
-            );
+            // $taskEvent->setOptions([
+            //     'backgroundColor' => 'red',
+            //     'borderColor' => 'red',
+            // ]);
+
+            // $taskEvent->addOption(
+            //     'url',
+            //     $this->router->generate('task_show', [
+            //         'id' => $task->getId(),
+            //     ])
+            // );
 
             // finally, add the event to the CalendarEvent to fill the calendar
             $calendar->addEvent($taskEvent);
