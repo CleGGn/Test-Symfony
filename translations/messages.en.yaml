@@ -1,6 +1,7 @@
 general:
   name: Name
   description: Description
+  created_at: creation date
   due_date: Due Date
   category: Tag
   button:

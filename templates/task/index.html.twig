@@ -3,6 +3,9 @@
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('assets/style.css') }}"/>
 	<link rel="stylesheet" href="cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
 {% endblock %}
 
 {% block title %}Liste des tâches
@@ -38,6 +41,7 @@
 				<th>Id</th>
 				<th>{{'general.name' | trans}}</th>
 				<th>{{'general.description' | trans}}</th>
+				<th>{{'general.created_at' | trans}}</th>
 				<th>{{'general.due_date' | trans}}</th>
 				<th>{{'general.category' | trans}}</th>
 				<th></th>
@@ -50,6 +54,7 @@
 							<th scope="row">{{ task.id }}</th>
 							<td>{{ task.name }}</td>
 							<td>{{ task.description }}</td>
+							<td>{{ task.createdAt | date("d/m/Y h:i") }}</td>
 							<td>{{ task.dueAt | date("d/m/Y h:i") }}</td>
 							<td>{{ task.tag.name }}</td>
 							<td>
@@ -65,10 +70,16 @@
 		</table>
 	</div>
 
+	<div id="calendar-holder"></div>
+
 {% endblock %}
 
 {% block javascripts %}
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
 
 	<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
@@ -76,20 +87,51 @@
 		$(document).ready(function () {
 $('#tasksTable').DataTable({
 language: {
-"sLengthMenu": "{% trans from 'messages' %}datatables.sLengthMenu           {% endtrans %}",
-"sSearch": "{% trans from 'messages' %}datatables.sSearch           {% endtrans %}",
-"sInfo": "{% trans from 'messages' %}datatables.sInfo           {% endtrans %}",
+"sLengthMenu": "{% trans from 'messages' %}datatables.sLengthMenu                      {% endtrans %}",
+"sSearch": "{% trans from 'messages' %}datatables.sSearch                      {% endtrans %}",
+"sInfo": "{% trans from 'messages' %}datatables.sInfo                      {% endtrans %}",
 "sInfoEmpty": "Showing 0 to 0 of 0 records",
 "sInfoFiltered": "(filtered from _MAX_ total records)",
 "paginate": {
-"first": "{% trans from 'messages' %}datatables.first           {% endtrans %}",
-"previous": "{% trans from 'messages' %}datatables.previous           {% endtrans %}",
-"next": "{% trans from 'messages' %}datatables.next           {% endtrans %}",
-"last": "{% trans from 'messages' %}datatables.last           {% endtrans %}"
+"first": "{% trans from 'messages' %}datatables.first                      {% endtrans %}",
+"previous": "{% trans from 'messages' %}datatables.previous                      {% endtrans %}",
+"next": "{% trans from 'messages' %}datatables.next                      {% endtrans %}",
+"last": "{% trans from 'messages' %}datatables.last                      {% endtrans %}"
 }
 }
 
 });
+});
+	</script>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+var calendarEl = document.getElementById('calendar-holder');
+
+var calendar = new FullCalendar.Calendar(calendarEl, {
+defaultView: 'dayGridMonth',
+editable: true,
+eventSources: [
+{
+url: "{{ path('fc_load_events') }}",
+method: "POST",
+extraParams: {
+filters: JSON.stringify({})
+},
+failure: () => { // alert("There was an error while fetching FullCalendar!");
+}
+},
+],
+header: {
+left: 'prev,next today',
+center: 'title',
+right: 'dayGridMonth,timeGridWeek,timeGridDay'
+},
+plugins: [
+'interaction', 'dayGrid', 'timeGrid'
+], // https://fullcalendar.io/docs/plugin-index
+timeZone: 'UTC'
+});
+calendar.render();
 });
 	</script>
 

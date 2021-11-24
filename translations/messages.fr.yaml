@@ -1,6 +1,7 @@
 general:
   name: Nom
   description: Description
+  created_at: Date de création
   due_date: Date Effective
   category: Catégorie
   button:

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use DateTime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\Task;
@@ -133,5 +132,13 @@ class TaskController extends AbstractController
         ]);
 
         return new Response();
+    }
+
+    /**
+     * @Route("/calendar", name="task_calendar", methods={"GET"})
+     */
+    public function calendar(): Response
+    {
+        return $this->render('task/index.html.twig');
     }
 }
