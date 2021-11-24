@@ -37,23 +37,19 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         // Modify the query to fit to your entity and needs
         // Change task.beginAt by your start date property
-        $tasks = $this->taskRepository
-            ->createQueryBuilder('task')
-            ->where('task.dueAt at :end')
-            ->setParameter('start', $start->format('Y-m-d H:i:s'))
-            ->setParameter('end', $end->format('Y-m-d H:i:s'))
-            ->getQuery()
-            ->getResult();
+        $tasks = $this->taskRepository->findAll();
+        dd($tasks);
 
         foreach ($tasks as $task) {
             // this create the events with your data to fill calendar
             $taskEvent = new Event(
                 $task->getName(),
-                $task->getDescription(),
                 $task->getCreatedAt(),
                 $task->getDueAt(),
-                $task->getTag() // If the end date is null or not defined, a all day event is created.
+                $task->getDescription()
+                // If the end date is null or not defined, a all day event is created.
             );
+            dd($taskEvent);
 
             /*
              * Add custom options to events
