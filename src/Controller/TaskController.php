@@ -36,11 +36,20 @@ class TaskController extends AbstractController
      */
     public function index(): Response
     {
-        // $user = $this->getUser();
+        $user = $this->getUser();
+        $role = $user->getRoles();
+        $id = $user->getId();
+        $admin = "ROLE_ADMIN";
         // dd($user);
 
+        if (in_array($admin, $role)) {
+            $tasks = $this->repository->findAll();
+        } else {
+            $tasks = $this->repository->findBy(['user' => $id]);
+        }
+
         // Dans ce repository nous récupérons toutes les données
-        $tasks = $this->repository->findAll();
+
 
         // Affichage des données
 
@@ -62,7 +71,11 @@ class TaskController extends AbstractController
     {
         if (!$task) {
             $task = new Task;
+
             $task->setCreatedAt(new \DateTime());
+
+            $user = $this->getUser();
+            $task->setUser($user);
         }
 
 
