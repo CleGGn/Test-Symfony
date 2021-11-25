@@ -4,6 +4,11 @@ general:
   created_at: creation date
   due_date: Due Date
   category: Tag
+  status:
+    title: Status
+    1: To do
+    2: Work in progress
+    3: Done
   button:
     success: Confirm
     cancel: Cancel

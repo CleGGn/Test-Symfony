@@ -1,4 +1,16 @@
-#taskTable,
+/* #taskTable,
 .table-striped>tbody>tr:nth-of-type(odd)>* {
     color: rgb(248, 144, 106) !important;
+} */
+
+.statut_1 {
+    background-color: lightgreen !important;
+}
+
+.statut_3 {
+    background-color: rgb(233, 144, 144) !important;
+}
+
+.statut_2 {
+    background-color: rgb(243, 200, 120) !important;
 }

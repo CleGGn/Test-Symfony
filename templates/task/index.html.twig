@@ -26,16 +26,17 @@
 			{% endfor %}
 		{% endfor %}
 
-		<a href="{{ path('task_create') }}" class="btn btn-primary">{{'general.button.add' | trans}}
-		</a>
-
-		<a href="{{ path('task_download') }}" class="btn btn-primary">{{'general.button.download' | trans}}
+		<a href="{{ path('task_create') }}" class="btn btn-danger">{{'general.button.add' | trans}}
 		</a>
 
 		{% if is_granted('ROLE_ADMIN') %}
-			<a href="{{ path('user_listing') }}" class=" btn btn-primary">Liste Utilisateurs</a>
-			<a href="{{ path('tag_index') }}" class=" btn btn-primary">Gestion Catégories</a>
+			<a href="{{ path('user_listing') }}" class=" btn btn-info">Liste Utilisateurs</a>
+			<a href="{{ path('tag_index') }}" class=" btn btn-info">Gestion Catégories</a>
 		{% endif %}
+
+
+		<a href="{{ path('task_download') }}" class="btn btn-primary">{{'general.button.download' | trans}}
+		</a>
 
 
 		<table class="table table-striped tabled-bordered" id="tasksTable">
@@ -46,6 +47,7 @@
 				<th>{{'general.created_at' | trans}}</th>
 				<th>{{'general.due_date' | trans}}</th>
 				<th>{{'general.category' | trans}}</th>
+				<th>{{'general.status.title' | trans}}</th>
 				<th></th>
 				<th></th>
 			</thead>
@@ -59,6 +61,10 @@
 							<td>{{ task.createdAt | date("d/m/Y h:i") }}</td>
 							<td>{{ task.dueAt | date("d/m/Y h:i") }}</td>
 							<td>{{ task.tag.name }}</td>
+
+
+							<td class="statut_{{ task.status.label }}">
+								{{('general.status.' ~ task.status.label) | trans}}</td>
 							<td>
 								<a href="{{path ('task_update',{'id':task.id})}}" class="btn btn-success">{{'general.button.update' | trans}}</a>
 							</td>
@@ -70,44 +76,41 @@
 				{% endif %}
 			</tbody>
 		</table>
-	</div>
+	</tbody>
+</div>
 
-	<div id="calendar-holder"></div>
+<div id="calendar-holder"></div>{% endblock %}{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
 
-{% endblock %}
+<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
-{% block javascripts %}
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
-
-	<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-
-	<script>
-		$(document).ready(function () {
+<script>
+	$(document).ready(function () {
 $('#tasksTable').DataTable({
 language: {
-"sLengthMenu": "{% trans from 'messages' %}datatables.sLengthMenu                                  {% endtrans %}",
-"sSearch": "{% trans from 'messages' %}datatables.sSearch                                  {% endtrans %}",
-"sInfo": "{% trans from 'messages' %}datatables.sInfo                                  {% endtrans %}",
+"sLengthMenu": "{% trans from 'messages' %}datatables.sLengthMenu                                               {% endtrans %}",
+"sSearch": "{% trans from 'messages' %}datatables.sSearch                                               {% endtrans %}",
+"sInfo": "{% trans from 'messages' %}datatables.sInfo                                               {% endtrans %}",
 "sInfoEmpty": "Showing 0 to 0 of 0 records",
 "sInfoFiltered": "(filtered from _MAX_ total records)",
 "paginate": {
-"first": "{% trans from 'messages' %}datatables.first                                  {% endtrans %}",
-"previous": "{% trans from 'messages' %}datatables.previous                                  {% endtrans %}",
-"next": "{% trans from 'messages' %}datatables.next                                  {% endtrans %}",
-"last": "{% trans from 'messages' %}datatables.last                                  {% endtrans %}"
+"first": "{% trans from 'messages' %}datatables.first                                               {% endtrans %}",
+"previous": "{% trans from 'messages' %}datatables.previous                                               {% endtrans %}",
+"next": "{% trans from 'messages' %}datatables.next                                               {% endtrans %}",
+"last": "{% trans from 'messages' %}datatables.last                                               {% endtrans %}"
 }
 }
 
 });
 });
-	</script>
+</script>
 
-	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', () => {
 var calendarEl = document.getElementById('calendar-holder');
 
 var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -136,6 +139,4 @@ timeZone: 'UTC'
 });
 calendar.render();
 });
-	</script>
-
-{% endblock %}
+</script>{% endblock %}

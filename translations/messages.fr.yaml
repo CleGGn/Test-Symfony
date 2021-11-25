@@ -4,6 +4,11 @@ general:
   created_at: Date de création
   due_date: Date Effective
   category: Catégorie
+  status:
+    title: Statut
+    1: À faire
+    2: En cours d'exécution
+    3: Terminée
   button:
     success: Valider
     cancel: Annuler
