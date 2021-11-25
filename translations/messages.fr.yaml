@@ -4,6 +4,7 @@ general:
   created_at: Date de création
   due_date: Date Effective
   category: Catégorie
+  title_list_task: Liste des tâches
   status:
     title: Statut
     1: À faire
@@ -14,6 +15,9 @@ general:
     cancel: Annuler
     update: Modifier
     delete: Supprimer
+    archive: Archive
+    go_to_archive: Voir les archives
+    back: Retour
     add: Ajouter
     download: Telecharger
 datatables:

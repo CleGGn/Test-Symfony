@@ -40,25 +40,43 @@ class TaskController extends AbstractController
         $role = $user->getRoles();
         $id = $user->getId();
         $admin = "ROLE_ADMIN";
+        $slug = $user->getIsPrefered();
         // dd($user);
 
         if (in_array($admin, $role)) {
-            $tasks = $this->repository->findAll();
+            $tasks = $this->repository->findBy(array('isArchived' => '0'));
         } else {
-            $tasks = $this->repository->findBy(['user' => $id]);
+            $tasks = $this->repository->findBy(array(
+                'isArchived' => '0',
+                'user' => $id
+            ));
         }
-
-        // Dans ce repository nous récupérons toutes les données
-
-
-        // Affichage des données
-
-        // var_dump($tasks);
-        // die;
-
-        //dd($tasks);
-
         return $this->render('task/index.html.twig', [
+            'tasks' => $tasks,
+            'slug' => $slug,
+        ]);
+    }
+
+    /**
+     * @Route("/task/archives", name="task_archives")
+     */
+    public function indexArchives(): Response
+    {
+        $user = $this->getUser();
+        $role = $user->getRoles();
+        $id = $user->getId();
+        $admin = "ROLE_ADMIN";
+        // dd($user);
+
+        if (in_array($admin, $role)) {
+            $tasks = $this->repository->findBy(array('isArchived' => '1'));
+        } else {
+            $tasks = $this->repository->findBy(array(
+                'isArchived' => '1',
+                'user' => $id
+            ));
+        }
+        return $this->render('task/archives.html.twig', [
             'tasks' => $tasks,
         ]);
     }
@@ -147,11 +165,73 @@ class TaskController extends AbstractController
         return new Response();
     }
 
+    // Vérifie si la date éffective de la tâche est passée ou non
+    public function checkDueAt(Task $task)
+    {
+        $flag = false;
+        $dueAt = $task->getDueAt();
+        $today = new \DateTime();
+
+        if ($today > $dueAt) {
+            $flag = true;
+        }
+        return $flag;
+    }
+
+    /**
+     * @Route("task/archive/{id}", name="task_archive", requirements={"id"="\d+"})
+     * @return Response
+     */
+    public function archiveTask(Task $task): Response
+    {
+        if ($this->checkDueAt($task)) {
+            $task->setIsArchived(1);
+            $this->manager->persist($task);
+            $this->manager->flush();
+            $this->addFlash(
+                'success',
+                'La tâche a bien été archivée.'
+            );
+        } else {
+            $this->addFlash(
+                'warning',
+                'Impossible d\'archiver une tâche dont l\'échéance n\'a pas eu lieu'
+            );
+        }
+        return $this->redirectToRoute("task_listing");
+    }
+
     /**
      * @Route("/calendar", name="task_calendar", methods={"GET"})
      */
     public function calendar(): Response
     {
         return $this->render('task/index.html.twig');
+    }
+
+    /**
+     *@Route ("/task/archives_{slug}")
+     */
+    public function displayTable(String $slug)
+    {
+        //  Récupération des infos de l'utilisateur.
+        $user = $this->getUser();
+
+
+        if ($slug != 'manual') {
+            $tasks = $this->repository->findAll();
+            $user->setIsPrefered(0);
+            for ($i = 0; $i < count($tasks); $i++) {
+                if ($this->checkDueAt($tasks[$i])) {
+                    $this->archiveTask($tasks[$i]);
+                }
+            }
+        } else {
+            $user->setIsPrefered(1);
+        }
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+        return $this->index();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PhpParser\Node\Expr\Cast\Bool_;
 
 /**
  * Task
@@ -65,6 +66,16 @@ class Task
      * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="tasks")
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isArchived;
+
+    public function __construct(Bool $isArchived = false)
+    {
+        $this->setIsArchived($isArchived);
+    }
 
     public function getId(): ?int
     {
@@ -151,6 +162,18 @@ class Task
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getIsArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(bool $isArchived): self
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }
