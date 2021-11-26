@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Bartender;
 
 use App\Entity\Beer;
 use App\Service\BeerConnectionManager;
